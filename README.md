@@ -29,7 +29,7 @@ Event handling
 Basic database integration (if used)
 📸 Screenshots
 
-👨‍💻 Author Shashank singh
+👨‍💻 Author 
 
 Shashank Singh
 First Year Student | Aspiring Developer
