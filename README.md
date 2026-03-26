@@ -28,6 +28,5 @@ GUI development in Java
 Event handling
  File link https://1drv.ms/f/c/341CEF0EDE0C5852/IgCNrWeQELbPR65OtvkWpPu2ARFuiozr09SPFiia4jwUxFc?e=FqyF79
 👨‍💻 Author 
-
 Shashank Singh
 First Year Student | Aspiring Developer
