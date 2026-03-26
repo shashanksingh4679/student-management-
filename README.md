@@ -18,7 +18,7 @@ MySQL (if you used database, otherwise remove this)
 AddStudent.java – Handles adding student data
 UpdateStudent.java – Updates existing records
 ViewStudent.java – Displays student details
-DatabaseConnection.java – Manages database connectivity (if applicable)
+DatabaseConnection.java – Manages database connectivity
 🎯 Purpose
 
 This project was created as a first-year academic project to understand:
@@ -26,9 +26,6 @@ This project was created as a first-year academic project to understand:
 Object-Oriented Programming (OOP)
 GUI development in Java
 Event handling
-Basic database integration (if used)
-📸 Screenshots
-
 👨‍💻 Author 
 
 Shashank Singh
