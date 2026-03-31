@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,22 +15,18 @@ import javax.swing.JTextField;
 
 public class Addstudent extends JFrame implements ActionListener {
 
-    JTextField textName, textFatherName, textMotherName, textContactNumber, textEmail, textAddress, textM10, textM12, textRollnumber, textdob;
+    JTextField textName, textFatherName, textMotherName, textContactNumber, textEmail,
+            textAddress, textM10, textM12, textRollnumber, textdob;
     JButton submit, cancel;
-
     JComboBox<String> courseBox, departmentBox;
 
-    Random ran = new Random();
-    long f4 = Math.abs((ran.nextLong() % 9000L) + 1000L);
-
     public Addstudent() {
-
         setLayout(null);
         getContentPane().setBackground(new Color(166, 164, 252));
 
-        JLabel heading = new JLabel("New Student Details");
+        JLabel heading = new JLabel("ADD Student Details");
         heading.setBounds(310, 30, 500, 50);
-        heading.setFont(new Font("Serif", Font.BOLD, 30));
+        heading.setFont(new Font("Slate Dark", Font.BOLD, 30));
         add(heading);
 
         JLabel name = new JLabel("Name");
@@ -129,7 +123,8 @@ public class Addstudent extends JFrame implements ActionListener {
         courseLabel.setBounds(50, 400, 200, 30);
         courseLabel.setFont(new Font("Serif", Font.BOLD, 20));
         add(courseLabel);
-        String courses[] = {"B.Tech", "BBA", "BCA", "MBA", "MCA"};
+
+        String[] courses = {"B.Tech", "BBA", "BCA", "MBA", "MCA"};
         courseBox = new JComboBox<>(courses);
         courseBox.setBounds(200, 400, 150, 30);
         add(courseBox);
@@ -138,7 +133,8 @@ public class Addstudent extends JFrame implements ActionListener {
         department.setBounds(400, 400, 200, 30);
         department.setFont(new Font("Serif", Font.BOLD, 20));
         add(department);
-        String departments[] = {"Computer Science", "Electrical", "Mechanical", "Electronics", "Civil", "IT"};
+
+        String[] departments = {"Computer Science", "Electrical", "Mechanical", "Electronics", "Civil", "IT"};
         departmentBox = new JComboBox<>(departments);
         departmentBox.setBounds(600, 400, 150, 30);
         add(departmentBox);
@@ -166,47 +162,129 @@ public class Addstudent extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            String name = textName.getText();
-            String fatherName = textFatherName.getText();
-            String motherName = textMotherName.getText();
-            String contact = textContactNumber.getText();
-            String email = textEmail.getText();
-            String address = textAddress.getText();
-            String m10 = textM10.getText();
-            String m12 = textM12.getText();
-            String roll = textRollnumber.getText();
-            String dobText = textdob.getText();
+            String name = textName.getText().trim();
+            String fatherName = textFatherName.getText().trim();
+            String motherName = textMotherName.getText().trim();
+            String contact = textContactNumber.getText().trim();
+            String email = textEmail.getText().trim();
+            String address = textAddress.getText().trim();
+            String m10 = textM10.getText().trim();
+            String m12 = textM12.getText().trim();
+            String roll = textRollnumber.getText().trim();
+            String dob = textdob.getText().trim();
             String course = (String) courseBox.getSelectedItem();
             String department = (String) departmentBox.getSelectedItem();
 
+            if (name.isEmpty() || !name.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "Enter a valid Name (letters only).");
+                return;
+            }
+
+
+            if (fatherName.isEmpty() || !fatherName.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "Enter a valid Father's Name (letters only).");
+                return;
+            }
+
+
+            if (motherName.isEmpty() || !motherName.matches("[a-zA-Z ]+")) {
+                JOptionPane.showMessageDialog(this, "Enter a valid Mother's Name (letters only).");
+                return;
+            }
+
+            if (!contact.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Contact must be exactly 10 digits.");
+                return;
+            }
+
+
+            if (!email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+                JOptionPane.showMessageDialog(this, "Enter a valid Email (e.g. abc@gmail.com).");
+                return;
+            }
+
+
+            if (address.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Address cannot be empty.");
+                return;
+            }
+
+
+            try {
+                double marks10 = Double.parseDouble(m10);
+                if (marks10 < 0 || marks10 > 100) {
+                    JOptionPane.showMessageDialog(this, "10th Marks must be between 0 and 100.");
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "10th Marks must be a number.");
+                return;
+            }
+
+
+            try {
+                double marks12 = Double.parseDouble(m12);
+                if (marks12 < 0 || marks12 > 100) {
+                    JOptionPane.showMessageDialog(this, "12th Marks must be between 0 and 100.");
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "12th Marks must be a number.");
+                return;
+            }
+
+
+            if (!roll.matches("[a-zA-Z0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Roll Number must be alphanumeric (e.g. 22CS101).");
+                return;
+            }
+
+            if (!dob.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                JOptionPane.showMessageDialog(this, "Date of Birth must be in DD/MM/YYYY format.");
+                return;
+            }
             try {
                 Conn c = new Conn();
-                String query = "INSERT INTO student VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement ps = c.connection.prepareStatement(query);
-                ps.setString(1, String.valueOf(f4));
-                ps.setString(2, name);
-                ps.setString(3, fatherName);
-                ps.setString(4, motherName);
-                ps.setString(5, contact);
-                ps.setString(6, email);
-                ps.setString(7, address);
-                ps.setString(8, m10);
-                ps.setString(9, m12);
-                ps.setString(10, roll);
-                ps.setString(11, dobText);
-                ps.setString(12, course);
-                ps.setString(13, department);
-                ps.executeUpdate();
 
-                JOptionPane.showMessageDialog(null, "Details inserted successfully");
-                setVisible(false);
+                if (c.connection == null) {
+                    JOptionPane.showMessageDialog(this, "DB connection failed! Check PostgreSQL is running.");
+                    return;
+                }
+
+                String query = "INSERT INTO student (name, father_name, mother_name, contact, email, address, " +
+                        "class_10_marks, class_12_marks, roll_number, dob, course, department) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                PreparedStatement ps = c.connection.prepareStatement(query);
+                ps.setString(1, name);
+                ps.setString(2, fatherName);
+                ps.setString(3, motherName);
+                ps.setString(4, contact);
+                ps.setString(5, email);
+                ps.setString(6, address);
+                ps.setString(7, m10);
+                ps.setString(8, m12);
+                ps.setString(9, roll);
+                ps.setString(10, dob);
+                ps.setString(11, course);
+                ps.setString(12, department);
+                ps.executeUpdate();
+                ps.close();
+                c.connection.close();
+
+                JOptionPane.showMessageDialog(this, "Student added successfully!");
+                setVisible(true);
+
             } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 ex.printStackTrace();
             }
+
         } else {
             setVisible(false);
         }
     }
+
 
     public static void main(String[] args) {
         new Addstudent();
